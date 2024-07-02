@@ -1,14 +1,20 @@
-import { useRef } from "react";
-import Button from "./components/Button.tsx";
-import Container from "./components/Container.tsx";
 import Input from "./components/Input.tsx";
+import Form from "./components/Form.tsx";
+import Button from "./components/Button.tsx";
 
 function App() {
-  const input = useRef<HTMLInputElement>(null);
+  function handleSave(data: unknown) {
+    const extractedData = data as { name: string; age: string; }; // convert type to another type; use when we knows better than ts
+    console.log(extractedData);
+  }
+
   return (
     <main>
-      <Container as={Button}>Click Me</Container>
-      <Input label="Test" id="test" ref={input} />
+      <Form onSave={handleSave}>
+        <Input type="text" label="Name" id="name" />
+        <Input type="number" label="Age" id="age" />
+        <Button type="submit">Save</Button>
+      </Form>
     </main>
   );
 }
