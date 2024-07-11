@@ -1,12 +1,22 @@
+import { useRef } from 'react';
 import { useParams } from 'react-router-dom';
 
+import Button from '../components/Button.tsx';
+import Modal, { ModalHandle } from '../components/modals/Modal.tsx';
+
 import { SESSIONS } from '../dummy-sessions.ts';
+import BookSessionForm from '../components/BookSessionForm.tsx';
 
 export default function SessionPage() {
   const params = useParams<{ id: string }>();
+  const modal = useRef<ModalHandle>(null);
 
   const sessionId = params.id;
   const loadedSession = SESSIONS.find((session) => session.id === sessionId);
+
+  function handleModalOpen() {
+    modal.current?.open();
+  }
 
   if (!loadedSession) {
     return (
@@ -35,7 +45,10 @@ export default function SessionPage() {
               })}
             </time>
             <p>
-              {/* Todo: Add button that opens "Book Session" dialog / modal */}
+              <Button el="btn" onClick={handleModalOpen}>Book session</Button>
+              <Modal ref={modal}>
+                <BookSessionForm ref={modal}/>
+              </Modal>
             </p>
           </div>
         </header>
