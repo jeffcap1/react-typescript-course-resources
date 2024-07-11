@@ -3,7 +3,7 @@ import { createContext, useContext, useReducer, type ReactNode } from "react";
 export type Session = {
   id: string;
   title: string;
-  description: string;
+  summary: string;
   date: string;
 };
 

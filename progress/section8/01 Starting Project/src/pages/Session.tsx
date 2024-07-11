@@ -1,11 +1,11 @@
-import { useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useRef } from "react";
+import { useParams } from "react-router-dom";
 
-import Button from '../components/Button.tsx';
-import Modal, { ModalHandle } from '../components/modals/Modal.tsx';
+import Button from "../components/Button.tsx";
+import BookSessionModal from "../components/modals/BookSessionModal.tsx";
+import { ModalHandle } from "../components/modals/Modal.tsx";
 
-import { SESSIONS } from '../dummy-sessions.ts';
-import BookSessionForm from '../components/BookSessionForm.tsx';
+import { SESSIONS } from "../dummy-sessions.ts";
 
 export default function SessionPage() {
   const params = useParams<{ id: string }>();
@@ -26,29 +26,25 @@ export default function SessionPage() {
     );
   }
 
-
   return (
     <main id="session-page">
       <article>
         <header>
-          <img
-            src={loadedSession.image}
-            alt={loadedSession.title}
-          />
+          <img src={loadedSession.image} alt={loadedSession.title} />
           <div>
             <h2>{loadedSession.title}</h2>
             <time dateTime={new Date(loadedSession.date).toISOString()}>
-              {new Date(loadedSession.date).toLocaleDateString('en-US', {
-                day: 'numeric',
-                month: 'short',
-                year: 'numeric',
+              {new Date(loadedSession.date).toLocaleDateString("en-US", {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
               })}
             </time>
             <p>
-              <Button el="btn" onClick={handleModalOpen}>Book session</Button>
-              <Modal ref={modal}>
-                <BookSessionForm ref={modal}/>
-              </Modal>
+              <Button el="btn" onClick={handleModalOpen}>
+                Book session
+              </Button>
+              <BookSessionModal ref={modal} session={loadedSession} />
             </p>
           </div>
         </header>

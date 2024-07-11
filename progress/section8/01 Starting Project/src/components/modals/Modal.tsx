@@ -7,7 +7,7 @@ export type ModalHandle = {
 };
 
 type ModalProps = {
-  children: ReactNode
+  children: ReactNode;
 };
 
 const Modal = forwardRef<ModalHandle, ModalProps>(function Modal(
@@ -22,13 +22,15 @@ const Modal = forwardRef<ModalHandle, ModalProps>(function Modal(
       },
       close() {
         modalRef.current?.close();
-      }
+      },
     };
   });
 
   return (
     <Portal>
-      <dialog ref={modalRef} className="modal">{children}</dialog>
+      <dialog ref={modalRef} className="modal">
+        {children}
+      </dialog>
     </Portal>
   );
 });
