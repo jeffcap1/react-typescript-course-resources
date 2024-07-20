@@ -2,6 +2,7 @@ import { forwardRef, useImperativeHandle, useRef } from "react";
 import { useSessionContext } from "../../store/session-context";
 import Modal, { ModalHandle } from "./Modal";
 import Button from "../Button";
+import UpcomingSession from "../UpcomingSession";
 
 const UpcomingSessionsModal = forwardRef<ModalHandle>(
   function UpcomingSessionsModal(_, ref) {
@@ -17,10 +18,7 @@ const UpcomingSessionsModal = forwardRef<ModalHandle>(
       }
 
       return sessions.map((session) => (
-        <div key={session.id}>
-          <h4>{session.title}</h4>
-          <time>{session.date}</time>
-        </div>
+        <UpcomingSession key={session.id} session={session} />
       ));
     }
 

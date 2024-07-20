@@ -1,4 +1,4 @@
-import { forwardRef, useImperativeHandle, useRef } from "react";
+import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import Modal, { ModalHandle } from "./Modal";
 import Form, { FormHandle } from "../Form";
 import Button from "../Button";
@@ -7,13 +7,14 @@ import { Session, useSessionContext } from "../../store/session-context";
 
 type BookSessionModalProps = {
   session: Session;
-}
+};
 
 const BookSessionModal = forwardRef<ModalHandle, BookSessionModalProps>(
-  function BookSessionModal({ session } , ref) {
+  function BookSessionModal({ session }, ref) {
     const modalRef = useRef<ModalHandle | null>(null);
     const formRef = useRef<FormHandle>(null);
-    const {addSession} = useSessionContext();
+    const [error, setError] = useState<string | null>(null);
+    const { addSession } = useSessionContext();
 
     // forces modalRef to be the forwarded ref
     useImperativeHandle(ref, () => modalRef.current!, []);
@@ -23,20 +24,39 @@ const BookSessionModal = forwardRef<ModalHandle, BookSessionModalProps>(
       // normally this would be submitted to a server with the session
       console.log({ extractedData });
 
-      addSession({
-        id: session.id,
-        title: session.title,
-        summary: session.summary,
-        date: session.date,
-      });
+      try {
+        addSession({
+          id: session.id,
+          title: session.title,
+          summary: session.summary,
+          date: session.date,
+        });
 
-      formRef.current?.clear();
-      modalRef.current?.close();
+        console.log("close!");
+        formRef.current?.clear();
+        modalRef.current?.close();
+      } catch (error) {
+        console.log("in error");
+        if (typeof error === "string") {
+          return setError(error);
+        }
+
+        if (!(error instanceof Error)) {
+          return setError("An error occurred. Please try again.");
+        }
+
+        if ((error as Error).message === "Session already exists") {
+          return setError("You have already signed up for this session.");
+        }
+
+        return setError((error as Error).message);
+      }
     }
 
     return (
       <Modal ref={modalRef}>
         <Form onSave={handleFormSubmit} ref={formRef}>
+          {error !== null && <p className="error">{error}</p>}
           <h3>Book Session</h3>
           <Input type="text" label="Your Name" id="name" />
           <Input type="email" label="Your Email" id="email" />
